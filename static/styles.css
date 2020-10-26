@@ -1,0 +1,82 @@
+*{
+    font-family: Arial, Helvetica, sans-serif;
+}
+body{
+    background-color: #faf6f6 !important;
+}
+.numInput{
+    width: 55px;
+}
+.chartContainer{
+    width: 50%;
+    float: left;
+}
+.validos{
+    float: left;
+    width: 40%;
+    margin: 10px;
+}
+button{
+    padding: 5px;
+    background-color: #007bff;
+    color: white;
+    border-radius: 5px;
+    border: 1px solid #007bff;
+}
+input{
+    margin-left: 3px;
+    margin-right: 3px;
+}
+ input[type=number] {
+    -moz-appearance: textfield;
+}
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+} 
+.card{
+    width: 70%;
+    margin: auto;
+    background-color: white;
+    border-radius: 5px;
+    text-align: center;
+    padding: 30px;
+    border: 1px solid #cccccc;
+}
+.respuestas, h1{
+    margin-left: 6px;
+}
+
+#img{
+    display: block;
+    width: 50%;
+}
+ .puntosResp{
+    display: block;
+    width: 50%;
+}
+.funcObj{
+    display: block;
+    width: 50%;
+}
+ .puntos{
+    display: block;
+    width: 50%;
+}
+.clearfix{
+    float: none;
+    clear: both;
+}
+#img{
+    float: left;
+}
+.funcObj{
+    float: left;
+}
+.puntos{
+    float: left;
+}
+.puntosResp{
+    float: left;
+}

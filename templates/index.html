@@ -16,9 +16,24 @@
           <option value="Minimizar">Minimizar</option>
         </select>
         <br><br>
+        <label for="">Numero de Variables: </label>
+        <select ng-change="llenarFuncionObjetivo()" ng-model="numFuncionObj" name="" id="">
+          <option value="select" selected disabled>Seleccionar</option>
+          <option value="1">1</option>
+          <option value="2">2</option>
+          <option value="3">3</option>
+          <option value="4">4</option>
+          <option value="5">5</option>
+          <option value="6">6</option>
+          <option value="7">7</option>
+          <option value="8">8</option>
+        </select>
+        <br>
         <label for="">Funcion Objetivo:</label>
-        <input class="numInput" ng-model="formaCanonica.x1" type="number" step="any"><label for="">X1+</label>
-        <input class="numInput" ng-model="formaCanonica.x2" type="number" step="any"><label for="">X2</label>
+        <br>
+        <div ng-repeat="item in formaCanonica track by $index">
+          <label for="">+</label><input class="numInput" type="number" step="any" ng-model="item.valor"><input class="valor" type="text" ng-model="item.x" disabled>
+        </div>
         <!-- <button>Guardar</button> -->
         <br><br>
         <label for="">Restricciones:</label>

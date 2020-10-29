@@ -80,3 +80,9 @@ input::-webkit-inner-spin-button {
 .puntosResp{
     float: left;
 }
+.valor{
+    width: 20px;
+    border: 0;
+    background: transparent;
+    color: black;
+}

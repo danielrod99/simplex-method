@@ -5,14 +5,18 @@ app.controller('max-minCtrl', function ($scope,$http) {
     $scope.restricciones = [];
     $scope.maxomin = 'Maximizar';
     $scope.numRestricciones = 'select';
-    $scope.todosValidos = []
-    $scope.formaCanonica={
-        x1:0,
-        x2:0
-    }
+    $scope.todosValidos = [];
+    $scope.numFuncionObj='select';
+    $scope.formaCanonica=[]
     $scope.nuevo=false;
     $scope.showGraph=false;
     $scope.otro=false;
+    $scope.llenarFuncionObjetivo=function(){
+        $scope.formaCanonica=[]
+        for(let i=0;i<parseInt($scope.numFuncionObj);i++){
+            $scope.formaCanonica.push({valor:0,x:('X'+(i+1))})
+        }
+    }
     $scope.llenarRestricciones = function () {
         $scope.showGraph=false;
         $scope.restricciones = [];
@@ -135,6 +139,5 @@ app.controller('max-minCtrl', function ($scope,$http) {
             
         }
     }
-    $scope.revisarSiCorrige();
 });
 

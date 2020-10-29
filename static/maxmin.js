@@ -35,41 +35,23 @@ app.controller('max-minCtrl', function ($scope,$http) {
             alert('Algun valor en las restricciones no es un numero');
             return
         }
-        if(isNaN($scope.formaCanonica.x1)==true||isNaN($scope.formaCanonica.x2)==true){
-            alert('Algun valor de la funcion Objetivo no es un numero');
-            return
-        }
-        $scope.showGraph=false;
-        console.log($scope.restricciones)
-        $scope.nuevo=true;
-        $scope.otro=true;
         var fullBody={
             "maxomin": $scope.maxomin,
             "canonica": $scope.formaCanonica,
             "restricciones": $scope.restricciones
         }
+        console.log(fullBody)
        // $scope.$apply();
-        $http.post('/calcular',JSON.stringify(fullBody)).then((result)=>{
-            console.log(result)
-            if(typeof(result.data)=='string'){
-                alert('Hay una indeterminacion');
-                window.location.reload();
-            }else{
-                $scope.resFunObj=result.data.resFunObj;
-                $scope.puntos=result.data.puntos;
-                $scope.showGraph=true;
-                $scope.otro=false;
-                setTimeout(()=>{
-                    document.getElementById('img').innerHTML=`<img ng-show="showGraph" src="../static/grafica.png" alt="Grafica">`
-                },1000)
-                document.querySelector('.funcObj').innerHTML=`<p>Resultado:</p><p>x1 = ${$scope.resFunObj.x1}</p><p>x2 = ${$scope.resFunObj.x2}</p><p>Resultado Funcion Objetivo = ${$scope.resFunObj.resultado}</p>`
-                var puntos='<p>Puntos:</p>';
-                for(let i=0;i<$scope.puntos.length;i++){
-                    puntos+=`<p>[ ${$scope.puntos[i][0]} , ${$scope.puntos[i][1]} ]</p>`;
-                }
-                document.querySelector('.puntos').innerHTML=puntos;
-            }
-        })
+        // $http.post('/calcular',JSON.stringify(fullBody)).then((result)=>{
+        //     console.log(result)
+        //     if(typeof(result.data)=='string'){
+        //         alert('Hay una indeterminacion');
+        //         window.location.reload();
+        //     }else{
+        //         $scope.resFunObj=result.data.resFunObj;
+        //         $scope.puntos=result.data.puntos;
+        //     }
+        // })
         
     }
     $scope.ajustarEstilos=function(){

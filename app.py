@@ -1,5 +1,6 @@
 from flask import Flask, redirect, url_for, render_template, request
 import numpy as np
+from scipy.optimize import linprog
 import json
 import os
 app = Flask(__name__)

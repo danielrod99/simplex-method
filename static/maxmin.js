@@ -7,40 +7,88 @@ app.controller('max-minCtrl', function ($scope,$http) {
     $scope.numRestricciones = 'select';
     $scope.todosValidos = [];
     $scope.numFuncionObj='select';
-    $scope.formaCanonica=[]
+    $scope.fObjetivo=[]
     $scope.nuevo=false;
     $scope.showGraph=false;
     $scope.otro=false;
     $scope.llenarFuncionObjetivo=function(){
-        $scope.formaCanonica=[]
+        $scope.fObjetivo=[]
         for(let i=0;i<parseInt($scope.numFuncionObj);i++){
-            $scope.formaCanonica.push({valor:0,x:('X'+(i+1))})
+            $scope.fObjetivo.push({valor:0,x:('X'+(i+1))})
         }
     }
     $scope.llenarRestricciones = function () {
         $scope.showGraph=false;
         $scope.restricciones = [];
         var numero=parseInt($scope.numRestricciones);
+        var numX=[];
+        for(let i=0;i<parseInt($scope.numFuncionObj);i++){
+            numX.push({valor:0,x:('X'+(i+1))})
+        }
         for (let i = 0; i < numero; i++) {
             $scope.restricciones.push({
-                x1: 0,
-                x2: 0,
+                constantes: numX,
                 igualador: '<=',
                 resultado: 0,
             });
         }
+        console.log($scope.restricciones);
+        var objetos=document.querySelector('.objetos');
+        var content='';
+        for(let i=0;i<$scope.restricciones.length;i++){
+            for (let j = 0; j < $scope.restricciones[i].constantes.length; j++) {
+                content+=`<input class="numInput" id="restriccion${i}Constante${j}" ng-model="restricciones[${i}].constantes[${j}].valor" type="number" step="any"><label for="">${$scope.restricciones[i].constantes[j].x}+</label>`                
+            }
+            content+=`<select ng-model="restricciones[${i}].igualador" name="" id="igualador${i}">
+            <option value=">=">>=</option>
+            <option value="<="><=</option>
+            <option value="=">=</option>
+          </select>
+          <input id="resultado${i}" class="numInput" ng-model="restricciones[${i}].resultado" type="number" step="any"> <br>`
+        }
+        //console.log(content)
+        objetos.innerHTML=content;
     }    
     $scope.calcular=function(){
-        if($scope.revisarValores()=='error'){
-            alert('Algun valor en las restricciones no es un numero');
-            return
+        for(let i=0;i<$scope.restricciones.length;i++){
+            for (let j = 0; j < $scope.restricciones[i].constantes.length; j++) {
+                $scope.restricciones[i].constantes[j].valor=document.getElementById(`restriccion${i}Constante${j}`).value;          
+            }
+            $scope.restricciones[i].igualador=document.getElementById(`igualador${i}`).value;
+            $scope.restricciones[i].resultado=document.getElementById(`resultado${i}`).value;
+        }
+        for(let i=0;i<$scope.restricciones.length;i++){
+            for (let j = 0; j < $scope.restricciones[i].constantes.length; j++) {
+                $scope.restricciones[i].constantes[j].valor=parseFloat($scope.restricciones[i].constantes[j].valor)         
+            }
+            $scope.restricciones[i].resultado=parseFloat($scope.restricciones[i].resultado)
+        }
+        for(let i=0;i<$scope.restricciones.length;i++){
+            for (let j = 0; j < $scope.restricciones[i].constantes.length; j++) {
+                if(isNaN($scope.restricciones[i].constantes[j].valor)==true){
+                    alert('Algun valor en las restricciones no es un numero');
+                    return
+                }        
+            }
+            if(isNaN($scope.restricciones[i].resultado)==true){
+                alert('Algun valor en las restricciones no es un numero');
+                return
+            }
         }
         var fullBody={
             "maxomin": $scope.maxomin,
-            "canonica": $scope.formaCanonica,
+            "canonica": $scope.fObjetivo,
             "restricciones": $scope.restricciones
         }
         console.log(fullBody)
+        var c=[];
+        for (let i = 0; i < fullBody.canonica.length; i++) {
+            c.push(fullBody.canonica[i].valor);
+        }
+        var A=[];
+        for (let i = 0; i < fullBody.restricciones.length; i++) {
+            c.push(fullBody.restricciones[i].valor);
+        }
        // $scope.$apply();
         // $http.post('/calcular',JSON.stringify(fullBody)).then((result)=>{
         //     console.log(result)
@@ -98,7 +146,7 @@ app.controller('max-minCtrl', function ($scope,$http) {
     $scope.corregir=function(){
         try{
             localStorage.setItem('restricciones',JSON.stringify($scope.restricciones));
-            localStorage.setItem('formaCanonica',JSON.stringify($scope.formaCanonica));
+            localStorage.setItem('fObjetivo',JSON.stringify($scope.fObjetivo));
             localStorage.setItem('maxomin',$scope.maxomin);
             localStorage.setItem('corregir','si');
             window.location.reload();
@@ -112,7 +160,7 @@ app.controller('max-minCtrl', function ($scope,$http) {
             try{
                 localStorage.setItem('corregir','no');
                 $scope.restricciones=JSON.parse(localStorage.getItem('restricciones'));
-                $scope.formaCanonica=JSON.parse(localStorage.getItem('formaCanonica'));
+                $scope.fObjetivo=JSON.parse(localStorage.getItem('fObjetivo'));
                 $scope.maxomin=localStorage.getItem('maxomin');
                 $scope.numRestricciones=$scope.restricciones.length
             }catch(err){

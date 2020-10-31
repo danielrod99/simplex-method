@@ -1,31 +1,31 @@
 
 
 var app = angular.module('maxmin', []);
-app.controller('max-minCtrl', function ($scope,$http) {
+app.controller('max-minCtrl', function ($scope, $http) {
     $scope.restricciones = [];
     $scope.maxomin = 'Maximizar';
     $scope.numRestricciones = 'select';
     $scope.todosValidos = [];
-    $scope.numFuncionObj='select';
-    $scope.fObjetivo=[]
-    $scope.nuevo=false;
-    $scope.showGraph=false;
-    $scope.otro=false;
-    $scope.llenarFuncionObjetivo=function(){
-        $scope.fObjetivo=[]
-        for(let i=0;i<parseInt($scope.numFuncionObj);i++){
-            $scope.fObjetivo.push({valor:0,x:('X'+(i+1))})
+    $scope.numFuncionObj = 'select';
+    $scope.fObjetivo = []
+    $scope.nuevo = false;
+    $scope.showGraph = false;
+    $scope.otro = false;
+    $scope.llenarFuncionObjetivo = function () {
+        $scope.fObjetivo = []
+        for (let i = 0; i < parseInt($scope.numFuncionObj); i++) {
+            $scope.fObjetivo.push({ valor: 0, x: ('X' + (i + 1)) })
         }
     }
     $scope.llenarRestricciones = function () {
-        $scope.showGraph=false;
+        $scope.showGraph = false;
         $scope.restricciones = [];
-        var numero=parseInt($scope.numRestricciones);
-        var numX=[];
-        for(let i=0;i<parseInt($scope.numFuncionObj);i++){
-            numX.push({valor:0,x:('X'+(i+1))})
-        }
+        var numero = parseInt($scope.numRestricciones);
         for (let i = 0; i < numero; i++) {
+            var numX = [];
+            for (let j = 0; j < parseInt($scope.numFuncionObj); j++) {
+                numX.push({ valor: 0, x: ('X' + (j + 1)) })
+            }
             $scope.restricciones.push({
                 constantes: numX,
                 igualador: '<=',
@@ -33,29 +33,31 @@ app.controller('max-minCtrl', function ($scope,$http) {
             });
         }
         console.log($scope.restricciones);
-        var objetos=document.querySelector('.objetos');
-        var content='';
-        for(let i=0;i<$scope.restricciones.length;i++){
+        var objetos = document.querySelector('.objetos');
+        var content = '';
+        for (let i = 0; i < $scope.restricciones.length; i++) {
             for (let j = 0; j < $scope.restricciones[i].constantes.length; j++) {
-                content+=`<input class="numInput" id="restriccion${i}Constante${j}" ng-model="restricciones[${i}].constantes[${j}].valor" type="number" step="any"><label for="">${$scope.restricciones[i].constantes[j].x}+</label>`                
+                content += `<input class="numInput" id="restriccion${i}Constante${j}" type="number" step="any"><label for="">${$scope.restricciones[i].constantes[j].x}+</label>`
             }
-            content+=`<select ng-model="restricciones[${i}].igualador" name="" id="igualador${i}">
+            content += `<select name="" id="igualador${i}">
             <option value=">=">>=</option>
             <option value="<="><=</option>
             <option value="=">=</option>
           </select>
-          <input id="resultado${i}" class="numInput" ng-model="restricciones[${i}].resultado" type="number" step="any"> <br>`
+          <input id="resultado${i}" class="numInput" type="number" step="any"> <br>`
         }
         //console.log(content)
-        objetos.innerHTML=content;
-    }    
-    $scope.calcular=function(){
-        for(let i=0;i<$scope.restricciones.length;i++){
+        objetos.innerHTML = content;
+    }
+    $scope.calcular = function () {
+        for (let i = 0; i < $scope.restricciones.length; i++) {
             for (let j = 0; j < $scope.restricciones[i].constantes.length; j++) {
-                $scope.restricciones[i].constantes[j].valor=document.getElementById(`restriccion${i}Constante${j}`).value;          
+                console.log(`restriccion${i}Constante${j}`)
+                console.log(document.getElementById(`restriccion${i}Constante${j}`).value)
+                $scope.restricciones[i].constantes[j].valor = document.getElementById(`restriccion${i}Constante${j}`).value;
             }
-            $scope.restricciones[i].igualador=document.getElementById(`igualador${i}`).value;
-            $scope.restricciones[i].resultado=document.getElementById(`resultado${i}`).value;
+            $scope.restricciones[i].igualador = document.getElementById(`igualador${i}`).value;
+            $scope.restricciones[i].resultado = document.getElementById(`resultado${i}`).value;
         }
         for(let i=0;i<$scope.restricciones.length;i++){
             for (let j = 0; j < $scope.restricciones[i].constantes.length; j++) {
@@ -75,21 +77,21 @@ app.controller('max-minCtrl', function ($scope,$http) {
                 return
             }
         }
-        var fullBody={
+        var fullBody = {
             "maxomin": $scope.maxomin,
             "canonica": $scope.fObjetivo,
             "restricciones": $scope.restricciones
         }
         console.log(fullBody)
-        var c=[];
+        var c = [];
         for (let i = 0; i < fullBody.canonica.length; i++) {
             c.push(fullBody.canonica[i].valor);
         }
-        var A=[];
+        var A = [];
         for (let i = 0; i < fullBody.restricciones.length; i++) {
             c.push(fullBody.restricciones[i].valor);
         }
-       // $scope.$apply();
+        // $scope.$apply();
         // $http.post('/calcular',JSON.stringify(fullBody)).then((result)=>{
         //     console.log(result)
         //     if(typeof(result.data)=='string'){
@@ -100,73 +102,73 @@ app.controller('max-minCtrl', function ($scope,$http) {
         //         $scope.puntos=result.data.puntos;
         //     }
         // })
-        
-    }
-    $scope.ajustarEstilos=function(){
-        var divImg= document.getElementById('img');
-        var dataDiv= document.querySelector('.puntosResp');
-        var resultDiv=document.querySelector('.funcObj');
-        var puntos= document.querySelector('.puntos');
-        divImg.style.float='left';
-        dataDiv.style.float='left';
-        resultDiv.style.float='left';
-        puntos.style.float='left';
 
-        divImg.style.width='50%';
-        dataDiv.style.width='50%';
-        resultDiv.style.width='50%';
-        puntos.style.width='50%';
     }
-    $scope.reloading=function(){
+    $scope.ajustarEstilos = function () {
+        var divImg = document.getElementById('img');
+        var dataDiv = document.querySelector('.puntosResp');
+        var resultDiv = document.querySelector('.funcObj');
+        var puntos = document.querySelector('.puntos');
+        divImg.style.float = 'left';
+        dataDiv.style.float = 'left';
+        resultDiv.style.float = 'left';
+        puntos.style.float = 'left';
+
+        divImg.style.width = '50%';
+        dataDiv.style.width = '50%';
+        resultDiv.style.width = '50%';
+        puntos.style.width = '50%';
+    }
+    $scope.reloading = function () {
         window.location.reload();
     }
-    $scope.revisarValores=function(){
-        var hayError=false;
-        $scope.restricciones.forEach((item,index)=>{
-            if(isNaN(item.x1)==true){
-                hayError=true;
+    $scope.revisarValores = function () {
+        var hayError = false;
+        $scope.restricciones.forEach((item, index) => {
+            if (isNaN(item.x1) == true) {
+                hayError = true;
                 return 'error'
             }
-            if(isNaN(item.x2)==true){
-                hayError=true;
+            if (isNaN(item.x2) == true) {
+                hayError = true;
                 return 'error'
             }
-            if(isNaN(item.resultado)==true){
-                hayError=true;
+            if (isNaN(item.resultado) == true) {
+                hayError = true;
                 return 'error'
             }
 
         })
-        if(hayError){
+        if (hayError) {
             return 'error'
-        }else{
+        } else {
             return 'ok'
         }
     }
-    $scope.corregir=function(){
-        try{
-            localStorage.setItem('restricciones',JSON.stringify($scope.restricciones));
-            localStorage.setItem('fObjetivo',JSON.stringify($scope.fObjetivo));
-            localStorage.setItem('maxomin',$scope.maxomin);
-            localStorage.setItem('corregir','si');
+    $scope.corregir = function () {
+        try {
+            localStorage.setItem('restricciones', JSON.stringify($scope.restricciones));
+            localStorage.setItem('fObjetivo', JSON.stringify($scope.fObjetivo));
+            localStorage.setItem('maxomin', $scope.maxomin);
+            localStorage.setItem('corregir', 'si');
             window.location.reload();
-        }catch(err){
+        } catch (err) {
             alert('No se pudo guardar');
         }
     }
-    $scope.revisarSiCorrige=function(){
-        var corrige=localStorage.getItem('corregir');
-        if(corrige=='si'){
-            try{
-                localStorage.setItem('corregir','no');
-                $scope.restricciones=JSON.parse(localStorage.getItem('restricciones'));
-                $scope.fObjetivo=JSON.parse(localStorage.getItem('fObjetivo'));
-                $scope.maxomin=localStorage.getItem('maxomin');
-                $scope.numRestricciones=$scope.restricciones.length
-            }catch(err){
+    $scope.revisarSiCorrige = function () {
+        var corrige = localStorage.getItem('corregir');
+        if (corrige == 'si') {
+            try {
+                localStorage.setItem('corregir', 'no');
+                $scope.restricciones = JSON.parse(localStorage.getItem('restricciones'));
+                $scope.fObjetivo = JSON.parse(localStorage.getItem('fObjetivo'));
+                $scope.maxomin = localStorage.getItem('maxomin');
+                $scope.numRestricciones = $scope.restricciones.length
+            } catch (err) {
                 alert('No se pudo obtener datos')
             }
-            
+
         }
     }
 });

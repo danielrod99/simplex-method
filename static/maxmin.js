@@ -52,8 +52,6 @@ app.controller('max-minCtrl', function ($scope, $http) {
     $scope.calcular = function () {
         for (let i = 0; i < $scope.restricciones.length; i++) {
             for (let j = 0; j < $scope.restricciones[i].constantes.length; j++) {
-                console.log(`restriccion${i}Constante${j}`)
-                console.log(document.getElementById(`restriccion${i}Constante${j}`).value)
                 $scope.restricciones[i].constantes[j].valor = document.getElementById(`restriccion${i}Constante${j}`).value;
             }
             $scope.restricciones[i].igualador = document.getElementById(`igualador${i}`).value;
@@ -89,19 +87,46 @@ app.controller('max-minCtrl', function ($scope, $http) {
         }
         var A = [];
         for (let i = 0; i < fullBody.restricciones.length; i++) {
-            c.push(fullBody.restricciones[i].valor);
+            var oneRestriccion=[];
+            for (let j = 0; j < fullBody.restricciones[i].constantes.length; j++) {        
+                if(fullBody.restricciones[i].igualador=='>='){
+                    oneRestriccion.push(fullBody.restricciones[i].constantes[j].valor*-1);
+                }else{
+                    oneRestriccion.push(fullBody.restricciones[i].constantes[j].valor);
+                }        
+            }
+            A.push(oneRestriccion);
         }
+        for(let i=0;i<parseInt($scope.numFuncionObj);i++){
+            var mat=[]
+            for(let j=0;j<parseInt($scope.numFuncionObj);j++){
+                if(i==j){
+                    mat.push(-1);
+                }else{
+                    mat.push(0);
+                }
+            }
+            A.push(mat);
+        }
+        var b=[];
+        for (let i = 0; i < fullBody.restricciones.length; i++){
+            if(fullBody.restricciones[i].igualador=='>='){
+                b.push(fullBody.restricciones[i].resultado*-1);
+            }else{
+                b.push(fullBody.restricciones[i].resultado);
+            }
+        }
+        var newBody={
+            A:A,
+            b:b,
+            c:c
+        }
+        console.log(newBody);
         // $scope.$apply();
-        // $http.post('/calcular',JSON.stringify(fullBody)).then((result)=>{
-        //     console.log(result)
-        //     if(typeof(result.data)=='string'){
-        //         alert('Hay una indeterminacion');
-        //         window.location.reload();
-        //     }else{
-        //         $scope.resFunObj=result.data.resFunObj;
-        //         $scope.puntos=result.data.puntos;
-        //     }
-        // })
+        $http.post('/calcular',JSON.stringify(newBody)).then((result)=>{
+            console.log(result)
+            
+        })
 
     }
     $scope.ajustarEstilos = function () {

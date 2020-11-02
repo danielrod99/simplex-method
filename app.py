@@ -15,28 +15,20 @@ def informacion():
 def calcular():
     if request.method== 'POST':
         fullData=request.get_json()
-        print(fullData)
-        
-        fullArray=[]
-        for x in range(len(fullData['A'])):
-            array=[]
-            for y in range(len(fullData['A'][x])):
-                array.append(fullData['A'][x][y])
-            fullArray.append(array)
-
-        A=fullArray
-        print(A)
-        arrayb=[]
-        for x in range(len(fullData['b'])):
-            arrayb.append(fullData['b'][x])
-        b=arrayb
-        print(b)
-        arrayc=[]
-        for x in range(len(fullData['c'])):
-            arrayc.append(fullData['c'][x])
-        c=arrayc
-        print(c)
-        res = linprog(c, A_ub=A, b_ub=b,bounds=(0, None))
+        #print(fullData)
+        A=fullData['A']
+        #print(A)
+        b=fullData['b']
+        #print(b)
+        c=fullData['c']
+        #print(c)
+        constEq=fullData['cEq']
+        resEq=fullData['resEq']
+        if len(constEq)==0:
+            res = linprog(c, A_ub=A, b_ub=b,bounds=(0, None),method='simplex')
+        else:
+            res = linprog(c, A_ub=A, b_ub=b,A_eq=constEq,b_eq=resEq,bounds=(0, None),method='simplex')
+            
         print('Optimal value:', res.fun, '\nX:', res.x)
         return json.dumps(fullData)
 if __name__=='__main__':

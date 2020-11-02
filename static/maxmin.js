@@ -86,29 +86,43 @@ app.controller('max-minCtrl', function ($scope, $http) {
             c.push(fullBody.canonica[i].valor);
         }
         var A = [];
+        var constEq=[]
         for (let i = 0; i < fullBody.restricciones.length; i++) {
             var oneRestriccion=[];
+            var oneEqRes=[];
             for (let j = 0; j < fullBody.restricciones[i].constantes.length; j++) {        
                 if(fullBody.restricciones[i].igualador=='>='){
                     oneRestriccion.push(fullBody.restricciones[i].constantes[j].valor*-1);
-                }else{
+                }else if (fullBody.restricciones[i].igualador=='<='){
                     oneRestriccion.push(fullBody.restricciones[i].constantes[j].valor);
-                }        
+                }else if(fullBody.restricciones[i].igualador=='='){
+                    oneEqRes.push(fullBody.restricciones[i].constantes[j].valor)
+                }
             }
-            A.push(oneRestriccion);
+            if(oneRestriccion.length>0){
+                A.push(oneRestriccion);
+            }
+            if(oneEqRes.length>0){
+                constEq.push(oneEqRes);
+            }
         }
         var b=[];
+        var resEq=[];
         for (let i = 0; i < fullBody.restricciones.length; i++){
             if(fullBody.restricciones[i].igualador=='>='){
                 b.push(fullBody.restricciones[i].resultado*-1);
-            }else{
+            }else if(fullBody.restricciones[i].igualador=='<='){
                 b.push(fullBody.restricciones[i].resultado);
+            }else if(fullBody.restricciones[i].igualador=='='){
+                resEq.push(fullBody.restricciones[i].resultado);
             }
         }
         var newBody={
             A:A,
             b:b,
-            c:c
+            c:c,
+            cEq:constEq,
+            resEq:resEq
         }
         console.log(newBody);
         // $scope.$apply();

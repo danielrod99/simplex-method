@@ -97,17 +97,6 @@ app.controller('max-minCtrl', function ($scope, $http) {
             }
             A.push(oneRestriccion);
         }
-        for(let i=0;i<parseInt($scope.numFuncionObj);i++){
-            var mat=[]
-            for(let j=0;j<parseInt($scope.numFuncionObj);j++){
-                if(i==j){
-                    mat.push(-1);
-                }else{
-                    mat.push(0);
-                }
-            }
-            A.push(mat);
-        }
         var b=[];
         for (let i = 0; i < fullBody.restricciones.length; i++){
             if(fullBody.restricciones[i].igualador=='>='){

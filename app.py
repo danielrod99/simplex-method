@@ -29,7 +29,18 @@ def calcular():
         else:
             res = linprog(c, A_ub=A, b_ub=b,A_eq=constEq,b_eq=resEq,bounds=(0, None),method='simplex')
             
-        print('Optimal value:', res.fun, '\nX:', res.x)
-        return json.dumps(fullData)
+        #print('Optimal value:', res.fun, '\nX:', res.x)
+        print(res)
+        arrayX=[]
+        for a in res.x:
+            arrayX.append(a)
+        results={
+            "fun": res.fun,
+            "x":arrayX,
+            "success": res.success,
+            "status":res.status,
+            "message":res.message,
+        }
+        return json.dumps(results)
 if __name__=='__main__':
     app.run(debug=True)

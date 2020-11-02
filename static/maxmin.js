@@ -128,6 +128,19 @@ app.controller('max-minCtrl', function ($scope, $http) {
         // $scope.$apply();
         $http.post('/calcular',JSON.stringify(newBody)).then((result)=>{
             console.log(result)
+            if(result.data){
+                var simplex=result.data;
+                var content=''
+                if(simplex.success){
+                    content+=`<p>Resultado Funcion Objetivo: ${simplex.fun}</p><p>Valores de X: </p>`
+                    for(let i=0;i<simplex.x.length;i++){
+                        content+=`<p>X${i+1}: ${simplex.x[i]}</p>`
+                    }
+                }else{
+                    content+=`<p>Ha ocurrido un error</p>`
+                }
+                document.querySelector('.resultados').innerHTML=content;
+            }
             
         })
 

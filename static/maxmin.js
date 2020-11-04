@@ -117,6 +117,11 @@ app.controller('max-minCtrl', function ($scope, $http) {
                 resEq.push(fullBody.restricciones[i].resultado);
             }
         }
+        if($scope.maxomin=='Maximizar'){
+            for(let i=0;i<c.length;i++){
+                c[i]=c[i]*-1;
+            }
+        }
         var newBody={
             A:A,
             b:b,
@@ -132,6 +137,9 @@ app.controller('max-minCtrl', function ($scope, $http) {
                 var simplex=result.data;
                 var content=''
                 if(simplex.success){
+                    if($scope.maxomin=='Maximizar'&&simplex.fun<0){
+                        simplex.fun=simplex.fun*-1;
+                    }
                     content+=`<p>Resultado Funcion Objetivo: ${simplex.fun}</p><p>Valores de X: </p>`
                     for(let i=0;i<simplex.x.length;i++){
                         content+=`<p>X${i+1}: ${simplex.x[i]}</p>`
